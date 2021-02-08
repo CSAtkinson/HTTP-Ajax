@@ -5,29 +5,32 @@ import './FullPost.css';
 
 class FullPost extends Component {
     state = {
-        loadedPost: null
+        loadedPost: null,
+        error: false
     }
 
 
     componentDidUpdate() {
         if (this.props.id){
             if (!this.state.loadedPost || (this.state.loadedPost && this.state.loadedPost.id !== this.props.id)){
-                axios.get('http://jsonplaceholder.typicode.com/posts/' + this.props.id)
+                axios.get('/posts/' + this.props.id)
                 .then (response => {
                     this.setState({loadedPost: response.data})
+                })
+                .catch(error => {
+                    //console.log(error)
+                    this.setState({error:true})
                 });
             }            
         }       
     }
 
     deletePostHandler = () => {
-        axios.delete('http://jsonplaceholder.typicode.com/posts/' + this.props.id)
+        axios.delete('/posts/' + this.props.id)
             .then(response => {
                 console.log(response)
             });
     }
-
-
     
 
     render () {
