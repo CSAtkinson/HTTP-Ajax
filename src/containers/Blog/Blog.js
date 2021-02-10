@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Blog.module.css';
-import { Route, Link } from 'react-router-dom'
+import { Route, NavLink, Switch, Redirect } from 'react-router-dom'
 import Posts from './Posts/Posts'
 import NewPost from './NewPost/NewPost'
 
@@ -8,25 +8,35 @@ import NewPost from './NewPost/NewPost'
 
 
 class Blog extends Component {
-    render () {
+    state = {
+        auth: false
+    }
+
+    render() {
         return (
             <div className="Blog">
                 <header>
                     <nav>
                         <ul>
-                            <li><Link to="/">Home</Link></li>
-                            <li><Link to={{
+                            <li><NavLink to="/posts/" exact activeClassName="active">Posts</NavLink></li>
+                            <li><NavLink to={{
                                 pathname: '/new-post',
                                 hash: '#submit',
-                                search: '?quick-submit=true'
-                            }}>New Post</Link></li>
+                                search: '?quick-submit=true',
+                            }}>New Post</NavLink></li>
                         </ul>
                     </nav>
                 </header>
                 {/* <Route path="/" exact render={() => <h1>Home</h1>} />
                 <Route path="/" render={() => <h1>Home 2</h1>} /> */}
-                <Route path="/" exact component={Posts}  />
-                <Route path="/new-post" component={NewPost}  />
+
+                <Switch>
+                    {this.state.auth ? <Route path="/new-post" component={NewPost} /> : null} 
+                    <Route path="/posts" component={Posts} />
+                    <Redirect from="/" to="/posts" />
+                    <Route path="/" component={Posts} />
+                </Switch>
+
             </div>
         );
     }
